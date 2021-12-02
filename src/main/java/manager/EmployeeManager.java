@@ -115,10 +115,20 @@ public class EmployeeManager {
 	}
 	
 	protected List<Employee> readAll(){
-		List listeEmployees=new ArrayList<Employee>();
-		
+		List<Employee> listeEmployees=new ArrayList<Employee>();
+		boolean bool=true;
 		Session session=sessionFactory.openSession();
 		session.beginTransaction();
+		int i=1;
+		while (bool) {
+			try {
+				Employee e=read(i);
+				listeEmployees.add(e);
+				i++;
+			} catch (Exception e) {
+				bool=false;
+			}
+		}
 		
 		session.getTransaction().commit();
 		session.close();
@@ -130,9 +140,15 @@ public class EmployeeManager {
 		manager.setup();
 		//manager.create();
 		Employee e=new Employee();
-		e.setNom("nouveauNom");
-		manager.update(1, e);
-		manager.read(1);
+		//e.setNom("nouveauNom");
+		//manager.update(1, e);
+
+		List<Employee> listeEmp=manager.readAll();
+
+		for (int j=0;j<listeEmp.size();j++) {
+			System.out.println(listeEmp.get(j).toString());
+		}
+		//manager.read(8);
 		manager.exit();
 	}
 }
