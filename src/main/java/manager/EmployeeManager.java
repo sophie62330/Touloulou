@@ -10,6 +10,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import entities.Employee;
+import entities.Secteur;
 
 public class EmployeeManager {
 	protected SessionFactory sessionFactory;
@@ -24,14 +25,15 @@ public class EmployeeManager {
 			//on essaie de se connecter a la bdd
 			//on construit notre sesison ici
 			sessionFactory=new MetadataSources(registry).buildMetadata().buildSessionFactory();
-			
+			System.out.println("avant");
 			Session session=sessionFactory.openSession();
-			session.beginTransaction();
-			session.getTransaction().commit();
-			session.close();
+			
+			System.out.println(sessionFactory.toString());
 		} catch(Exception e) {
+			System.out.println("erreur");
 			StandardServiceRegistryBuilder.destroy(registry);
 			e.getStackTrace();
+			
 		}
 		
 	}
@@ -44,7 +46,7 @@ public class EmployeeManager {
 	
 	//CRUD
 	protected void create() {
-		//je crée un enregistrement
+		//je crée enregistrements employés
 		Employee employee=new Employee();
 		employee.setNom("Mantel");
 		employee.setPrenom("Sophie");
@@ -53,11 +55,34 @@ public class EmployeeManager {
 		employee.setTel("0300000000");
 		employee.setAdresse("10 rue jean jaurés 59000 Lille");
 		employee.setFonction("dev");
+	
+		Employee employee2=new Employee();
+		employee2.setNom("toto");
+		employee2.setPrenom("titi");
+		employee2.setAge(3);
+		employee2.setCourriel("toto@gmail.com");
+		employee2.setTel("50505050");
+		employee2.setAdresse("3 rue du moulin 59000 Lens");
+		employee2.setFonction("architecte");
+	
+		//je crée enregistrement secteur
+		Secteur secteur=new Secteur();
+		secteur.setNom("secteur1");
+		secteur.setLocalisation("france");
+
+		//relation secteur employee
+		secteur.getEmployees().add(employee);
+		secteur.getEmployees().add(employee2);
+		employee.setSecteur(secteur);
+		employee2.setSecteur(secteur);
+		
 		Session session=sessionFactory.openSession();
 		session.beginTransaction();
-		session.save(employee);
+		session.save(secteur);
 		session.getTransaction().commit();
 		session.close();
+		
+
 	}
 	
 	protected Employee read(long id) {
@@ -136,19 +161,66 @@ public class EmployeeManager {
 	}
 	
 	public static void main(String[] args) {
-		EmployeeManager manager=new EmployeeManager();
-		manager.setup();
+		SessionFactory sessionFactory;
+		//load d'une sesison hibernate
+		//on récupére la conf d'hibernate pour créer un hibernate
+		//ici on ne se connecte pas donc on ne lance pas de session avec la bdd
+		final StandardServiceRegistry registry=new StandardServiceRegistryBuilder().configure().build();
+		
+
+			//on essaie de se connecter a la bdd
+			//on construit notre sesison ici
+			sessionFactory=new MetadataSources(registry).buildMetadata().buildSessionFactory();
+			
+			Session session=sessionFactory.openSession();
+			session.beginTransaction();
+			
+			Employee employee=new Employee();
+			employee.setNom("Mantel");
+			employee.setPrenom("Sophie");
+			employee.setAge(33);
+			employee.setCourriel("sophie@gmail.com");
+			employee.setTel("0300000000");
+			employee.setAdresse("10 rue jean jaurés 59000 Lille");
+			employee.setFonction("dev");
+		
+			Employee employee2=new Employee();
+			employee2.setNom("toto");
+			employee2.setPrenom("titi");
+			employee2.setAge(3);
+			employee2.setCourriel("toto@gmail.com");
+			employee2.setTel("50505050");
+			employee2.setAdresse("3 rue du moulin 59000 Lens");
+			employee2.setFonction("architecte");
+		
+			//je crée enregistrement secteur
+			Secteur secteur=new Secteur();
+			secteur.setNom("secteur1");
+			secteur.setLocalisation("france");
+
+			//relation secteur employee
+			secteur.getEmployees().add(employee);
+			secteur.getEmployees().add(employee2);
+			employee.setSecteur(secteur);
+			employee2.setSecteur(secteur);
+			
+			session.save(secteur);
+			
+			session.getTransaction().commit();
+			session.close();
+		//EmployeeManager manager=new EmployeeManager();
+		//manager.setup();
 		//manager.create();
-		Employee e=new Employee();
+		//Employee e=new Employee();
 		//e.setNom("nouveauNom");
 		//manager.update(1, e);
 
-		List<Employee> listeEmp=manager.readAll();
-
+		//List<Employee> listeEmp=manager.readAll();
+		/*
 		for (int j=0;j<listeEmp.size();j++) {
 			System.out.println(listeEmp.get(j).toString());
 		}
-		//manager.read(8);
-		manager.exit();
+		*/
+		//manager.exit();
 	}
 }

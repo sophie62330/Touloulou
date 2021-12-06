@@ -17,13 +17,34 @@ public class Employee {
 	private String courriel;
 	
 	private String tel;
+	
 	private String adresse;
 	
 	private int age;
 	
 	private String fonction;
 	
+    @ManyToOne
+    @JoinColumn(name="id_secteur")
+	private Secteur secteur;
 	
+	
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public Secteur getSecteur() {
+		return secteur;
+	}
+
+	public void setSecteur(Secteur secteur) {
+		this.secteur = secteur;
+	}
+
 	public Employee() {
 		super();
 	}

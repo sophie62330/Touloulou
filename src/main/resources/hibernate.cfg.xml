@@ -19,5 +19,8 @@
 		
 		<!-- on map les entités à la bdd -->
 		<mapping class="entities.Employee" />
+		<mapping class="entities.Entreprise" />
+		<mapping class="entities.Filiale" />
+		<mapping class="entities.Secteur" />
 	</session-factory>
 </hibernate-configuration>
